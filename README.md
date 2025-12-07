@@ -48,6 +48,7 @@ movie-app/                          PROJECT ROOT
 3. run this inside of project terminal: npm install
 
 then npm install express mongoose express-session connect-flash express-validator bcryptjs pug express-session connect-mongo dotenv
+then npm install --save-dev nodemon
 
 4. create .env file
 
