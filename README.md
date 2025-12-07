@@ -47,6 +47,8 @@ movie-app/                          PROJECT ROOT
 
 3. run this inside of project terminal: npm install
 
+then npm install express mongoose express-session connect-flash express-validator bcryptjs pug express-session connect-mongo dotenv
+
 4. create .env file
 
   it neeeds to have the MONGODB_URI (the location of your MongoDB server)
