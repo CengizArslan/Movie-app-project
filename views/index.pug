@@ -1,0 +1,34 @@
+extends layout.pug
+
+block content
+  h1.mb-4 Movie Collection
+  
+  if currentUser
+    a.btn.btn-success.mb-4(href="/movies/add") Add New Movie
+  
+  .row
+    if movies && movies.length > 0
+      each movie in movies
+        .col-md-4.mb-4
+          .card
+            .card-body
+              h5.card-title= movie.name
+              h6.card-subtitle.mb-2.text-muted= `Year: ${movie.year} | Rating: ${movie.rating}/10`
+              p.card-text= movie.description.length > 100 ? movie.description.substring(0, 100) + '...' : movie.description
+              .mb-2
+                each genre in movie.genres
+                  span.badge.bg-secondary.me-1= genre
+              p.text-muted.small Posted by: #{movie.createdBy.username}
+              a.btn.btn-primary.btn-sm(href=`/movies/${movie._id}`) View Details
+              if currentUser && currentUser._id == movie.createdBy._id.toString()
+                a.btn.btn-warning.btn-sm.ms-1(href=`/movies/${movie._id}/edit`) Edit
+    else
+      .col-12
+        .alert.alert-info
+          if currentUser
+            | No movies found. 
+            a.alert-link(href="/movies/add") Add your first movie!
+          else
+            | No movies found. Please 
+            a.alert-link(href="/login") log in
+            |  to add movies.

@@ -1,0 +1,65 @@
+extends ../layout.pug
+
+block content
+  .row
+    .col-md-8
+      .card
+        .card-body
+          h1.card-title= movie.name
+          h4.card-subtitle.mb-3.text-muted= `Year: ${movie.year} | Rating: ${movie.rating}/10`
+          
+          .mb-3
+            each genre in movie.genres
+              span.badge.bg-primary.me-2= genre
+          
+          h5.mt-4 Description
+          p.card-text= movie.description
+          
+          .mt-4
+            p.text-muted
+              | Posted by: 
+              strong= movie.createdBy.username
+          
+          .mt-4
+            a.btn.btn-primary.me-2(href="/") Back to Movies
+            if currentUser && currentUser._id == movie.createdBy._id.toString()
+              a.btn.btn-warning.me-2(href=`/movies/${movie._id}/edit`) Edit Movie
+              button.btn.btn-danger(type="button", onclick=`deleteMovie('${movie._id}')`) Delete Movie
+    
+    .col-md-4
+      .card
+        .card-body
+          h5.card-title Actions
+          .d-grid.gap-2
+            a.btn.btn-primary(href="/") All Movies
+            if !currentUser
+              a.btn.btn-success(href="/login") Log in to add movies
+            else if currentUser._id == movie.createdBy._id.toString()
+              a.btn.btn-info(href=`/movies/${movie._id}/edit`) Edit Movie
+            else
+              a.btn.btn-secondary(href="/movies/add") Add Your Own Movie
+
+block scripts
+  script.
+    function deleteMovie(movieId) {
+      if (confirm('Are you sure you want to delete this movie?')) {
+        fetch(`/movies/${movieId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = '/';
+          } else {
+            alert('Error deleting movie');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error deleting movie');
+        });
+      }
+    }

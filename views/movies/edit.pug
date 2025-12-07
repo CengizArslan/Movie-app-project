@@ -1,0 +1,47 @@
+extends ../layout.pug
+
+block content
+  h1.mb-4 Edit Movie
+  
+  .row
+    .col-md-8
+      form(method="POST", action=`/movies/${movie._id}/edit`)
+        .mb-3
+          label.form-label(for="name") Movie Name
+          input.form-control(type="text", id="name", name="name", value=movie.name || '', required)
+          if errors && errors.find(e => e.param === 'name')
+            .text-danger= errors.find(e => e.param === 'name').msg
+        
+        .mb-3
+          label.form-label(for="description") Description
+          textarea.form-control(id="description", name="description", rows="3", required)= movie.description || ''
+          if errors && errors.find(e => e.param === 'description')
+            .text-danger= errors.find(e => e.param === 'description').msg
+        
+        .row
+          .col-md-6.mb-3
+            label.form-label(for="year") Release Year
+            input.form-control(type="number", id="year", name="year", value=movie.year || '', required)
+            if errors && errors.find(e => e.param === 'year')
+              .text-danger= errors.find(e => e.param === 'year').msg
+          
+          .col-md-6.mb-3
+            label.form-label(for="rating") Rating (0-10)
+            input.form-control(type="number", id="rating", name="rating", step="0.1", min="0", max="10", value=movie.rating || '', required)
+            if errors && errors.find(e => e.param === 'rating')
+              .text-danger= errors.find(e => e.param === 'rating').msg
+        
+        .mb-3
+          label.form-label Genres
+          .row
+            each genre in genres
+              .col-md-4
+                .form-check
+                  input.form-check-input(type="checkbox", name="genres", value=genre, id=`genre-${genre}`,
+                    checked=(movie.genres && movie.genres.includes(genre)))
+                  label.form-check-label(for=`genre-${genre}`)= genre
+          if errors && errors.find(e => e.param === 'genres')
+            .text-danger= errors.find(e => e.param === 'genres').msg
+        
+        button.btn.btn-warning(type="submit") Update Movie
+        a.btn.btn-secondary.ms-2(href=`/movies/${movie._id}`) Cancel
